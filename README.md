@@ -2,7 +2,7 @@
 
 ## Laps tracks the time you spend on your tasks.
 
-Laps is a time tracker you use within the shell. It asks you what you're working on, accepts commands such as "done" or "exit," and displays a breakdown of each task and its time. 
+Laps is a time tracker you use within the shell. It asks you what you're working on, accepts commands, and displays a breakdown of each task and its time. 
 
 When you tell Laps that you're done, it will prompt you to add comments before breaking down your day. The breakdown includes the time you spent on each task, the total time spent on repetitive tasks, and the total spent using the program. 
 
