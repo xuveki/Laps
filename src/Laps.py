@@ -140,6 +140,28 @@ def are_you_sure_you_want_to_exit():
 
     return askThemAgainResponse
 
+def ask_again():
+
+    print("Type \"done\" to finish timing a task, \"change\" to edit your task, or \"exit\" to abandon your current task and exit.")
+
+    userInput = input()
+    print("\n")
+    
+    return userInput
+
+def change_task_name():
+
+    print("What would you like to change your task to?\n")
+
+    newTaskName = input()
+    print("\n")
+    print(f"Task name changed to {newTaskName}.\n")
+    
+    global taskName
+    taskName = newTaskName
+
+    return
+
 # Take input from user. If they want to exit, where in the program are they and react accordingly
 
 def check_quit(userInput):
@@ -163,16 +185,7 @@ def check_quit(userInput):
 
     return True
 
-def ask_again():
-
-    print("Type \"done\" to finish timing a task. Type \"exit\" to abandon your current task and exit.")
-    print("\n")
-
-    userInput = input()
-    
-    return userInput
-
-# Check if they're done, checks if they want to exit. If not, keeps asking them. May call check_quit() and ask_again()
+# Check if they're done, checks if they want to exit. Checks if they want to change the task name. If not, keeps asking them. May call check_quit() and ask_again()
 
 def check_input(userInput):
     
@@ -186,6 +199,10 @@ def check_input(userInput):
 
         endProgram = True
         return endProgram
+
+    if userInput.casefold() == "change".casefold():
+
+        change_task_name()
 
     doneOrExitResponse = ask_again()
     
@@ -285,7 +302,7 @@ programOn = True
 
 while programOn:
 
-    print("\nType your task's name. \nType \"done\" to time your task or type \"exit\" to stop and save.\n")
+    print("\nType your task's name. \nType \"done\" to time your task, \"change\" to edit your task, or \"exit\" to stop and save.\n")
     print("So what are you working on?\n")
     taskName = input()
     
@@ -305,6 +322,7 @@ while programOn:
     print(f"\nStarting {taskName.upper()} at {str(taskStartTimeHourFormat)}\n")
     print(f"Type \"done\" when you're done with \"{taskName}\".\n")
     secondInputExpectedToBeDone = input()
+    print("\n")
 
     checkInputResult = check_input(secondInputExpectedToBeDone)
 
