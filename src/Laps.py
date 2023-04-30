@@ -275,11 +275,11 @@ def check_premature_done(taskName):
         return taskName
 
     print("You can't be done yet! Type a task name first or \"exit\" if you'd like to quit.\n")
-    taskName = input()
+    newInput = input()
 
-    check_quit(taskName)
+    check_quit(newInput)
 
-    taskName = check_premature_done(taskName)
+    taskName = check_premature_done(newInput)
     
     return taskName
 
