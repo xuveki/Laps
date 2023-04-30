@@ -1,7 +1,6 @@
 import time
 import sys
-from datetime import date
-from datetime import datetime
+from datetime import date, datetime
 import os
 
 def program_quit():
@@ -26,13 +25,11 @@ def write_task_and_times(file_object, taskNameList, taskTimeList):
 
         file_object.write("\n")
     
-    file_object.write("\n")
-
-    file_object.write("\nIn total:\n")
+    #file_object.write("\n")
     
     for task in repeatedTasks:
         
-        file_object.write(f"\n{task.upper()} {repeatedTasks[task]}")
+        file_object.write(f"\nA total of {task.upper()} {repeatedTasks[task]}")
 
     file_object.write("\n")
     file_object.write(totalTimeString)
@@ -102,15 +99,13 @@ def final_print():
     print(f"{str(todaysDate)}\n")
 
     taskNamesAndTimes = "\n".join("{} {}".format(x.upper(), y) for x, y in zip(taskNameList, taskTimeList))
-    print(taskNamesAndTimes)
+    print(taskNamesAndTimes, "\n",)
     
     calculate_repeated_task_times()
-
-    print("\nIn total:\n")
     
     for task in repeatedTasks:
         
-        print(task.upper(), repeatedTasks[task], sep=" ")
+        print("A total of", task.upper(), repeatedTasks[task], sep=" ")
 
     # Print totalTimeString
     print(totalTimeString)
@@ -119,7 +114,7 @@ def final_print():
     print("\n" + "-" * 20)
     print("Comments:\n" + commentInput)
 
-    create_file_and_write(commentInput)
+    return commentInput
 
 def are_you_sure_you_want_to_exit():
     
@@ -139,6 +134,28 @@ def are_you_sure_you_want_to_exit():
     askThemAgainResponse = are_you_sure_you_want_to_exit()
 
     return askThemAgainResponse
+
+def ask_again():
+
+    print("Type \"done\" to finish timing a task, \"change\" to edit your task, or \"exit\" to abandon your current task and exit.")
+
+    userInput = input()
+    print("\n")
+    
+    return userInput
+
+def change_task_name():
+
+    print("What would you like to change your task to?\n")
+
+    newTaskName = input()
+    print("\n")
+    print(f"Task name changed to {newTaskName}.\n")
+    
+    global taskName
+    taskName = newTaskName
+
+    return
 
 # Take input from user. If they want to exit, where in the program are they and react accordingly
 
@@ -163,16 +180,7 @@ def check_quit(userInput):
 
     return True
 
-def ask_again():
-
-    print("Type \"done\" to finish timing a task. Type \"exit\" to abandon your current task and exit.")
-    print("\n")
-
-    userInput = input()
-    
-    return userInput
-
-# Check if they're done, checks if they want to exit. If not, keeps asking them. May call check_quit() and ask_again()
+# Check if they're done, checks if they want to exit. Checks if they want to change the task name. If not, keeps asking them. May call check_quit() and ask_again()
 
 def check_input(userInput):
     
@@ -187,6 +195,10 @@ def check_input(userInput):
         endProgram = True
         return endProgram
 
+    if userInput.casefold() == "change".casefold():
+
+        change_task_name()
+
     doneOrExitResponse = ask_again()
     
     checkAgainResponse = check_input(doneOrExitResponse)
@@ -198,11 +210,13 @@ def print_task_recap(taskName, taskTimeUnits, totalTimeString, taskTime):
     print(f"{str(taskTime)} {str(taskTimeUnits)} of {taskName.upper()}.")
     print(totalTimeString)
 
-def add_total_time_repeated_tasks(taskNameList, taskName, taskTime, taskTimesInSeconds):
+def add_total_time_repeated_tasks(taskNameList, taskName, taskTime, taskTimesInSecondsList):
     
     repeatedTasksTotalTimeSum = taskTime
 
-    for task in range(len(taskNameList)):
+    # Check for repeated tasks not counting the last entry: range(len -1)
+
+    for task in range(len(taskNameList) - 1):
 
         hasTheTaskBeenDoneBefore = taskName.upper() == taskNameList[task].upper()
         
@@ -210,7 +224,8 @@ def add_total_time_repeated_tasks(taskNameList, taskName, taskTime, taskTimesInS
 
             continue
 
-        repeatedTasksTotalTimeSum += round(taskTimesInSeconds[task], 2)
+        repeatedTasksTotalTimeSum += taskTimesInSecondsList[task]
+        repeatedTasksTotalTimeSum = round(repeatedTasksTotalTimeSum, 2)
         repeatedTasks[taskName] = repeatedTasksTotalTimeSum
 
     return repeatedTasks
@@ -253,12 +268,27 @@ def calculate_task_times(taskTime, totalTime):
 
     return taskTimeString, totalTimeString, taskTimeUnits, totalTimeUnits, taskTime
 
+def check_premature_done(taskName):
+    
+    if taskName.casefold() != "done".casefold():
+
+        return taskName
+
+    print("You can't be done yet! Type a task name first or \"exit\" if you'd like to quit.\n")
+    newInput = input()
+
+    check_quit(newInput)
+
+    taskName = check_premature_done(newInput)
+    
+    return taskName
+
 # START
 
 # The stack:
 # check_input -> check_quit -> back to check_input -> ask_again -> back and check_input(recurse)
 # check_quit might call are_you_sure... and if they are -> return into check_quit -> final_print
-# That calls create_file_and_write
+# create_file_and_write
 # create_file_and_write calls write_task_and_times and returns through the stack into main
 # check_input 's return is stored into checkInputResult
 
@@ -271,7 +301,7 @@ todayDayOfWeekFormat = datetime.now().strftime('%A')
 
 taskNameList = []
 taskTimeList = []
-taskTimesInSeconds = []
+taskTimesInSecondsList = []
 repeatedTasks = {}
 
 hasNotCompletedATaskMessage = "Nothing was done before program exit."
@@ -285,13 +315,16 @@ programOn = True
 
 while programOn:
 
-    print("\nType your task's name. \nType \"done\" to time your task or type \"exit\" to stop and save.\n")
+    print("\nType your task's name. \nType \"done\" to time your task, \"change\" to edit your task, or \"exit\" to stop and save.\n")
     print("So what are you working on?\n")
     taskName = input()
+
+    taskName = check_premature_done(taskName)
     
     if check_quit(taskName) == True:
 
-        final_print()
+        userCommentReturned = final_print()
+        create_file_and_write(userCommentReturned)
         
         break
 
@@ -305,15 +338,15 @@ while programOn:
     print(f"\nStarting {taskName.upper()} at {str(taskStartTimeHourFormat)}\n")
     print(f"Type \"done\" when you're done with \"{taskName}\".\n")
     secondInputExpectedToBeDone = input()
+    print("\n")
 
     checkInputResult = check_input(secondInputExpectedToBeDone)
-
-    print(" ")
 
     checkInputForQuit = checkInputResult
     if checkInputForQuit == True:
 
-        final_print()
+        userCommentReturned = final_print()
+        create_file_and_write(userCommentReturned)
 
         break
 
@@ -330,12 +363,12 @@ while programOn:
     timeStringsReturned = calculate_task_times(taskTime, totalTime)
 
     totalTimeString = timeStringsReturned[1]
-
-    repeatedTasksForPrint = add_total_time_repeated_tasks(taskNameList, taskName, taskTime, taskTimesInSeconds)
-
+    
     taskNameList.append(taskName)
     taskTimeList.append(timeStringsReturned[0])
-    taskTimesInSeconds.append(taskTime)
+    taskTimesInSecondsList.append(taskTime)
+
+    repeatedTasks = add_total_time_repeated_tasks(taskNameList, taskName, taskTime, taskTimesInSecondsList)
 
     print_task_recap(taskName, timeStringsReturned[2], timeStringsReturned[1], timeStringsReturned[4])
 
