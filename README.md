@@ -13,3 +13,7 @@ It writes your tasks, times, comments, and more to a text file in a readable fas
 After downloading, you can run the exec file which will create and write to a .txt file in the same directory during first use. If you're on Windows, you can run the py file instead.
 
 Commands are not case-sensitive. Same goes for task names. Currently, the 'Laps-history' text file will be created in the same directory as the exec file. Functionality and features such as cancelling a task, editing a task name or time while the program is running, and more are on the to-do list.
+
+# Compiling
+
+The binary file was created using Auto Py to Exe (GUI for PyInstaller). PyInstaller bundles a Python application and all its dependencies into a single package. If you're on Windows and you have Python installed, you can use the .py file. More accessible solutions to come.
