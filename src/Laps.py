@@ -15,9 +15,9 @@ def write_task_and_times(file_object, taskNameList, taskTimeList):
 
     manualIndex = 0
     
-    for taskNameInList in taskNameList:
+    for taskName in taskNameList:
 
-        file_object.write(f"{taskNameInList.upper()} {taskTimeList[manualIndex]}")
+        file_object.write(f"{taskName.upper()} {taskTimeList[manualIndex]}")
         
         # uses current index integer that iterates with for loop. Using the index variable will call the first instance of the index value which could be an earlier task with the same name.
 
@@ -144,7 +144,95 @@ def ask_again():
     
     return userInput
 
-def change_task_name():
+def convert_to_seconds(userInput):
+            
+    # Check if the input string is in the format HH:MM:SS
+    if ':' in userInput:
+        
+        parts = userInput.split(':')
+
+        if len(parts) != 3:
+            return None  # Invalid format
+        
+        try:
+            hours = int(parts[0])
+            minutes = int(parts[1])
+            seconds = int(parts[2])
+            return hours * 3600 + minutes * 60 + seconds
+        
+        except ValueError:
+            return None  # Invalid format
+
+    # Check if the input string is in the format "X hour(s)", "X minute(s)", or "X second(s)"
+    if ' ' in userInput:
+        
+        parts = userInput.split(' ')
+        
+        if len(parts) != 2:
+            return None  # Invalid format
+        
+        try:
+            value = int(parts[0])
+            unit = parts[1].lower()
+            if unit.endswith('s'):
+                unit = unit[:-1]  # Remove 's' from the unit if present
+            if unit == 'hour' or unit == 'hours':
+                return value * 3600
+            elif unit == 'minute' or unit == 'minutes':
+                return value * 60
+            elif unit == 'second' or unit == 'seconds':
+                return value
+            else:
+                return None  # Invalid unit
+        
+        except ValueError:
+            return None  # Invalid format
+
+    return None
+
+def manual_task_input(userInput):
+
+    if userInput.casefold() != "manual".casefold():
+
+        return False
+    
+    print("\nYou'd like to manually enter a task and time. What task would you like to enter?\n")
+    taskName = input()
+    
+    print(f"\nGot it. How long did you work on {taskName}?\nYou can type this in HH:MM:SS format or as in regular English (e.g. 20 minutes)\n")
+
+    taskLengthInput = input()
+
+    timeInSeconds = convert_to_seconds(taskLengthInput)
+    
+    while timeInSeconds is None:
+
+        taskLengthInput = input("\nLooks like you typed your time in an invalid format. Try typing it in either HH:MM:SS format or in regular English (e.g. 1 hour, 2 minutes, or 3 seconds).")
+
+    global totalTime, totalTimeString
+    totalTime += timeInSeconds
+
+    timeStringsReturned = calculate_task_times(timeInSeconds, totalTime)
+
+    totalTimeString = timeStringsReturned[1]
+    
+    addTasksToLists(taskName, timeInSeconds, timeStringsReturned)
+
+    print_task_recap(taskName, timeStringsReturned[2], timeStringsReturned[1], timeStringsReturned[4])
+
+    global hasNotEnteredFirstTask, taskWasEnteredAndCompleted 
+    hasNotEnteredFirstTask = False
+    taskWasEnteredAndCompleted = True
+
+    userDone = True
+
+    return userDone
+
+def change_task_name(userInput):
+
+    if userInput.casefold() != "change".casefold():
+
+        return False
 
     print("What would you like to change your task to?\n")
 
@@ -186,24 +274,24 @@ def check_input(userInput):
     
     if userInput.casefold() == "done".casefold():
         
-        return
+        return 1
 
     checkQuitResult = check_quit(userInput)
 
     if checkQuitResult == True:
 
-        endProgram = True
+        endProgram = 2
         return endProgram
 
-    if userInput.casefold() == "change".casefold():
+    change_task_name(userInput)
 
-        change_task_name()
+    if hasNotEnteredFirstTask == False:
 
-    doneOrExitResponse = ask_again()
-    
-    checkAgainResponse = check_input(doneOrExitResponse)
+        doneOrExitResponse = ask_again()
+        
+        checkAgainResponse = check_input(doneOrExitResponse)
 
-    return checkAgainResponse
+        return checkAgainResponse
 
 def print_task_recap(taskName, taskTimeUnits, totalTimeString, taskTime):
 
@@ -229,6 +317,20 @@ def add_total_time_repeated_tasks(taskNameList, taskName, taskTime, taskTimesInS
         repeatedTasks[taskName] = repeatedTasksTotalTimeSum
 
     return repeatedTasks
+
+def addTasksToLists(taskName, taskTime, timeStringsReturned):
+
+    taskNameList.append(taskName)
+    taskTimeList.append(timeStringsReturned[0])
+    taskTimesInSecondsList.append(taskTime)
+
+    add_total_time_repeated_tasks(taskNameList, taskName, taskTime, taskTimesInSecondsList)
+
+    return
+
+# taskNameList = repeatedTasks[0]
+# taskTimeList = repeatedTasks[1]
+# taskTimesInSecondsList = repeatedTasks[2]
 
 # Calculate task time units and save time strings for later use
 
@@ -277,8 +379,6 @@ def check_premature_done(taskName):
     print("You can't be done yet! Type a task name first or \"exit\" if you'd like to quit.\n")
     newInput = input()
 
-    check_quit(newInput)
-
     taskName = check_premature_done(newInput)
     
     return taskName
@@ -306,12 +406,17 @@ repeatedTasks = {}
 
 hasNotCompletedATaskMessage = "Nothing was done before program exit."
 totalTimeString = hasNotCompletedATaskMessage
+totalTime = 0
+taskTime = 0
 
 taskNumber = 1
 
 hasNotEnteredFirstTask = True
+taskWasEnteredAndCompleted = False
 
 programOn = True
+
+print("Welcome to Laps!")
 
 while programOn:
 
@@ -320,13 +425,17 @@ while programOn:
     taskName = input()
 
     taskName = check_premature_done(taskName)
+    checkResult = check_quit(taskName)
     
-    if check_quit(taskName) == True:
+    if checkResult == True:
 
         userCommentReturned = final_print()
         create_file_and_write(userCommentReturned)
-        
         break
+
+    elif manual_task_input(taskName) == True:
+
+        continue
 
     hasNotEnteredFirstTask = False
     
@@ -343,7 +452,7 @@ while programOn:
     checkInputResult = check_input(secondInputExpectedToBeDone)
 
     checkInputForQuit = checkInputResult
-    if checkInputForQuit == True:
+    if checkInputForQuit == 2:
 
         userCommentReturned = final_print()
         create_file_and_write(userCommentReturned)
@@ -356,19 +465,15 @@ while programOn:
 
     taskTime = round((currentTime - taskStartTime), 2)
 
-    totalTime = round((currentTime - programStartTime), 2)
-
-    print(f"{taskName.upper()} (Task No. {str(taskNumber)})")
+    totalTime += taskTime 
 
     timeStringsReturned = calculate_task_times(taskTime, totalTime)
 
     totalTimeString = timeStringsReturned[1]
-    
-    taskNameList.append(taskName)
-    taskTimeList.append(timeStringsReturned[0])
-    taskTimesInSecondsList.append(taskTime)
 
-    repeatedTasks = add_total_time_repeated_tasks(taskNameList, taskName, taskTime, taskTimesInSecondsList)
+    addTasksToLists(taskName, taskTime, timeStringsReturned)
+
+    print(f"{taskName.upper()} (Task No. {str(taskNumber)})")
 
     print_task_recap(taskName, timeStringsReturned[2], timeStringsReturned[1], timeStringsReturned[4])
 
