@@ -220,9 +220,10 @@ def manual_task_input(userInput):
 
     print_task_recap(taskName, timeStringsReturned[2], timeStringsReturned[1], timeStringsReturned[4])
 
-    global hasNotEnteredFirstTask, taskWasEnteredAndCompleted 
+    global hasNotEnteredFirstTask
+    # global taskWasEnteredAndCompleted 
     hasNotEnteredFirstTask = False
-    taskWasEnteredAndCompleted = True
+    # taskWasEnteredAndCompleted = True
 
     userDone = True
 
@@ -396,6 +397,7 @@ programStartTimeForFileWrite = datetime.now().strftime("%I:%M %p")
 
 todaysDate = date.today()
 todayDayOfWeekFormat = datetime.now().strftime('%A')
+programEndDayOfWeekFormat = datetime.now().strftime('%A')
 
 taskNameList = []
 taskTimeList = []
@@ -433,6 +435,7 @@ while programOn:
 
     elif manual_task_input(taskName) == True:
 
+        taskWasEnteredAndCompleted = True
         continue
 
     hasNotEnteredFirstTask = False
@@ -444,10 +447,12 @@ while programOn:
 
     print(f"\nStarting {taskName.upper()} at {str(taskStartTimeHourFormat)}\n")
     print(f"Type \"done\" when you're done with \"{taskName}\".\n")
-    secondInputExpectedToBeDone = input()
+    secondInput = input()
     print("\n")
 
-    checkInputResult = check_input(secondInputExpectedToBeDone)
+    CheckInputForManual = manual_task_input(secondInput)
+
+    checkInputResult = check_input(secondInput)
 
     checkInputForQuit = checkInputResult
     if checkInputForQuit == 2:
