@@ -46,7 +46,7 @@ def create_file_and_write(commentInput):
     directoryName = os.path.dirname(absolutePath)
     
     # open a .txt file in append/read mode as a "file_object"
-    with open(os.path.join(directoryName, "Laps-History.txt"), "a+") as file_object:
+    with open(os.path.join(directoryName, "laps-history.txt"), "a+") as file_object:
 
         file_object.seek(0)
 
