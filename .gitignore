@@ -1,1 +1,3 @@
-laps-history.txt
+laps-history*
+history/
+.DS_Store
