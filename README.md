@@ -1,0 +1,19 @@
+# What is Laps?
+
+## Laps tracks the time you spend on your tasks.
+
+Laps is a time tracker you use within the shell. It asks you what you're working on, accepts commands, and displays a breakdown of each task and its time. 
+
+When you tell Laps that you're done, it will prompt you to add comments before breaking down your day. The breakdown includes the time you spent on each task, the total time spent on repetitive tasks, and the total spent using the program. 
+
+You can start and a task as you work on it, enter a task and time manually, cancel tasks, and change the current task name as well. 
+
+It writes your tasks, times, comments, and more to a text file in a readable fashion. Each time you use Laps, it appends this file and adds your last session to your history for you to view or edit later.  
+
+# Installation and Use
+
+After downloading, you can run the exec file which will create and write to a .txt file in the same directory. If you're on Windows and have python installed, you can run the py file instead.
+
+Commands are not case-sensitive. Same goes for task names. Currently, the 'Laps-history' text file will be created in the same directory as the file you use (either the source or build). More features are on the way.
+
+The binary file was created using PyInstaller. PyInstaller bundles a Python application and all its dependencies into a single package. If you're on Windows and you have Python installed, you can use the .py file. Better solutions to come.

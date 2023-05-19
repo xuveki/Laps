@@ -37,15 +37,22 @@ def create_file_and_write(commentInput):
     
   # open a .txt file to append
   
-  # Create absolute path and find directory to feed into path.join for use with the .py file. 
+  # Create absolute path and find directory. Find parent directory of that and create history/ directory if there isn't one already 
+  # Feed into path.join for use with the .py file. 
   # The exec file will use sys.executable to find the path of the exec file and write to a file there
   # Exec file was created using py-installer.
   
   absolutePath = os.path.realpath(sys.argv[0])
   directoryName = os.path.dirname(absolutePath)
+  directoryAbove = os.path.dirname(directoryName)
+
+  historyDir = directoryAbove + "/history/"
+
+  if os.path.exists(historyDir) == False:
+    os.mkdir(historyDir)
   
   # open a .txt file in append/read mode as a "file_object"
-  with open(os.path.join(directoryName, "laps-history.txt"), "a+") as file_object:
+  with open(os.path.join(historyDir, "laps-history.txt"), "a+") as file_object:
 
     file_object.seek(0)
 
@@ -342,12 +349,6 @@ def addTasksToLists(taskName, taskTime, timeStringsReturned):
   add_total_time_repeated_tasks(taskNameList, taskName, taskTime, taskTimesInSecondsList)
 
   return
-
-# taskNameList = repeatedTasks[0]
-# taskTimeList = repeatedTasks[1]
-# taskTimesInSecondsList = repeatedTasks[2]
-
-# Calculate task time units and save time strings for later use
 
 def calculate_task_times(taskTime, totalTime):
 
