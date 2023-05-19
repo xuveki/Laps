@@ -4,11 +4,11 @@
 
 Laps is a time tracker you use within the shell. It asks you what you're working on, accepts commands, and displays a breakdown of each task and its time. 
 
-When you tell Laps that you're done, it will prompt you to add comments before breaking down your day. The breakdown includes the time you spent on each task, the total time spent on repetitive tasks, and the total spent using the program. 
+When you tell Laps that you're done, it will prompt you to add comments after breaking down your day. The breakdown includes the time you spent on each task, the total time spent on repetitive tasks, and the total spent using the program. 
 
-You can start and a task as you work on it, enter a task and time manually, cancel tasks, and change the current task name as well. 
+You can start and a task as you work on it, enter a task and time manually, cancel tasks, and rename the current task name as well. 
 
-It writes your tasks, times, comments, and more to a text file in a readable fashion. Each time you use Laps, it appends this file and adds your last session to your history for you to view or edit later.  
+It writes your tasks, times, comments, and more to a a readable text file. Each time you use Laps, it appends this file and adds your last session to your history for you to view or edit later.  
 
 # Installation and Use
 
