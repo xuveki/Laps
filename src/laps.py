@@ -120,7 +120,6 @@ def final_print():
   print("\nExiting program.\n")
   print("( ･‿･)ﾉ゛")
   #print("★─▄█▀▀║░▄█▀▄║▄█▀▄║██▀▄║─★\n★─██║▀█║██║█║██║█║██║█║─★\n★─▀███▀║▀██▀║▀██▀║███▀║─★\n★───────────────────────★\n★───▐█▀▄─ ▀▄─▄▀ █▀▀──█───★\n★───▐█▀▀▄ ──█── █▀▀──▀───★\n★───▐█▄▄▀ ──▀── ▀▀▀──▄───★")
-  #print("Comments:\n" + commentInput)
 
   return commentInput
 
@@ -381,6 +380,7 @@ def calculate_task_times(taskTime, totalTime):
     totalTimeString = str(totalTime) + " Minutes in total."
       
   else:
+    totalTime = round(totalTime, 2)
     totalTimeUnits = "Seconds"
     totalTimeString = str(totalTime) + " Seconds in total."
 
@@ -467,7 +467,7 @@ while programOn:
   print(f"\nStarting {taskName.upper()} at {str(taskStartTimeHourFormat)}\n")
   print(f"Type \"done\" when you're done with \"{taskName}\".\n")
   secondInput = input()
-  print("\n")
+  print()
 
   CheckInputForManual = manual_task_input(secondInput)
 
