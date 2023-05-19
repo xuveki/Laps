@@ -5,8 +5,7 @@ import os
 
 def program_quit():
     
-  print("\nExited")
-
+  # print("\nExited")
   sys.exit(0)  
 
 # Iterate through the task list and write the names and times to the file
@@ -92,9 +91,7 @@ def calculate_repeated_task_times():
 
 def final_print():
   
-  print("\nOkay. You want to exit. Add any comments below:\n")
-  commentInput = input()
-  print("\n")
+  print("\nOkay. You want to exit. Here's a breakdown of your day:\n")
 
   print(f"{str(todaysDate)}\n")
 
@@ -109,9 +106,14 @@ def final_print():
   # Print totalTimeString
   print(totalTimeString)
 
-  # ASCII divider
   print("\n" + "-" * 20)
-  print("Comments:\n" + commentInput)
+  
+  commentInput = input("Add any comments you have below:\n")
+
+  print("\nExiting program.\n")
+  print("( ･‿･)ﾉ゛")
+  #print("★─▄█▀▀║░▄█▀▄║▄█▀▄║██▀▄║─★\n★─██║▀█║██║█║██║█║██║█║─★\n★─▀███▀║▀██▀║▀██▀║███▀║─★\n★───────────────────────★\n★───▐█▀▄─ ▀▄─▄▀ █▀▀──█───★\n★───▐█▀▀▄ ──█── █▀▀──▀───★\n★───▐█▄▄▀ ──▀── ▀▀▀──▄───★")
+  #print("Comments:\n" + commentInput)
 
   return commentInput
 
@@ -134,7 +136,7 @@ def are_you_sure_you_want_to_exit():
 
 def ask_again():
 
-  print("Type \"done\" to finish timing a task, \"change\" to edit your task, or \"exit\" to abandon your current task and exit.")
+  print("Type \"done\" to finish timing a task, \"rename\" to edit your task, \"manual\" to add a task manually, or \"exit\" to abandon your current task and exit.")
 
   userInput = input()
   print("\n")
@@ -168,7 +170,7 @@ def convert_to_seconds(userInput):
       return None  # Invalid format
     
     try:
-      value = int(parts[0])
+      value = float(parts[0])
       unit = parts[1].lower()
       if unit.endswith('s'):
         unit = unit[:-1]  # Remove 's' from the unit if present
@@ -216,6 +218,9 @@ def manual_task_input(userInput):
   addTasksToLists(taskName, timeInSeconds, timeStringsReturned)
 
   print_task_recap(taskName, timeStringsReturned[2], timeStringsReturned[1], timeStringsReturned[4])
+  
+  # ASCII divider
+  print("-" * 20)
 
   global hasNotEnteredFirstTask
   # global taskWasEnteredAndCompleted 
@@ -244,12 +249,12 @@ def cancel_task(userInput):
 
   return cancel_task(userInput)
 
-def change_task_name(userInput):
+def rename_task(userInput):
 
-  if userInput.casefold() != "change".casefold():
+  if userInput.casefold() != "rename".casefold():
     return False
 
-  print("What would you like to change your task to?\n")
+  print("What would you like to change or rename your task to?\n")
 
   newTaskName = input()
   print("\n")
@@ -292,7 +297,7 @@ def check_input(userInput):
     endProgram = 2
     return endProgram
 
-  change_task_name(userInput)
+  rename_task(userInput)
   
   if cancel_task(userInput) == True:
 
@@ -431,7 +436,7 @@ print("Welcome to Laps!")
 
 while programOn:
 
-  print("\nType your task's name. \nType \"done\" to time your task, \"change\" to edit your task, or \"exit\" to stop and save.\n")
+  print("\nType your task's name. \nType \"done\" to time your task, \"rename\" to edit your task, or \"exit\" to stop and save.\n")
   print(prompt)
   taskName = input()
 
