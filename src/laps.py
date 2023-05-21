@@ -203,7 +203,7 @@ def manual_task_input(userInput):
   print("\nYou'd like to manually enter a task and time. What task would you like to enter?\n")
   taskName = input()
   
-  print(f"\nGot it. How long did you work on {taskName}?\nYou can type this in HH:MM:SS format or as in regular English (e.g. 20 minutes)\n")
+  print(f"\nGot it. How long did you work on {taskName}?\nYou can type this in HH:MM:SS format or in regular English (e.g. 20 minutes).\n")
 
   taskLengthInput = input()
 
