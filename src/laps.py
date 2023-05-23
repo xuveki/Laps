@@ -1,7 +1,10 @@
 import time
 import sys
-from datetime import date, datetime
 import os
+from colorama import Fore, Back, Style, just_fix_windows_console
+from datetime import date, datetime
+from rich.console import Console
+from rich.markdown import Markdown
 
 def program_quit():
     
@@ -44,9 +47,9 @@ def create_file_and_write(commentInput):
   
   absolutePath = os.path.realpath(sys.argv[0])
   directoryName = os.path.dirname(absolutePath)
-  directoryAbove = os.path.dirname(directoryName)
+  parentDirectory = os.path.dirname(directoryName)
 
-  historyDir = directoryAbove + "/history/"
+  historyDir = parentDirectory + "/history/"
 
   if os.path.exists(historyDir) == False:
     os.mkdir(historyDir)
@@ -98,34 +101,34 @@ def calculate_repeated_task_times():
 
 def final_print():
   
-  print("\nOkay. You want to exit. Here's a breakdown of your day:\n")
+  console.print("\nOkay. You want to exit. [bold]Here's a breakdown of your day:[/bold]\n")
 
-  print(f"{str(todaysDate)}\n")
+  console.print(f"{str(todaysDate)}\n")
 
   taskNamesAndTimes = "\n".join("{} {}".format(x.upper(), y) for x, y in zip(taskNameList, taskTimeList))
-  print(taskNamesAndTimes, "\n",)
+  console.print(taskNamesAndTimes, "\n",)
   
   calculate_repeated_task_times()
   
   for task in repeatedTasks:
-    print("A total of", task.upper(), repeatedTasks[task], sep=" ")
+    console.print("A total of", task.upper(), repeatedTasks[task], sep=" ")
 
   # Print totalTimeString
-  print(totalTimeString)
+  console.print(totalTimeString)
 
-  print("\n" + "-" * 20)
+  console.print("\n" + "-" * 20)
   
   commentInput = input("Add any comments you have below:\n")
 
-  print("\nExiting program.\n")
-  print("( ･‿･)ﾉ゛")
-  #print("★─▄█▀▀║░▄█▀▄║▄█▀▄║██▀▄║─★\n★─██║▀█║██║█║██║█║██║█║─★\n★─▀███▀║▀██▀║▀██▀║███▀║─★\n★───────────────────────★\n★───▐█▀▄─ ▀▄─▄▀ █▀▀──█───★\n★───▐█▀▀▄ ──█── █▀▀──▀───★\n★───▐█▄▄▀ ──▀── ▀▀▀──▄───★")
+  console.print("\nExiting program.\n", style="bold")
+  console.print(Markdown("### Goodbye"))
+  #console.print(Markdown("★─▄█▀▀║░▄█▀▄║▄█▀▄║██▀▄║─★\n★─██║▀█║██║█║██║█║██║█║─★\n★─▀███▀║▀██▀║▀██▀║███▀║─★\n★───────────────────────★\n★───▐█▀▄─ ▀▄─▄▀ █▀▀──█───★\n★───▐█▀▀▄ ──█── █▀▀──▀───★\n★───▐█▄▄▀ ──▀── ▀▀▀──▄───★"))
 
   return commentInput
 
 def are_you_sure_you_want_to_exit():
     
-  print("You haven't completed your current task yet. Are you sure you want to exit? Type \"Yes\" or \"No\".")
+  console.print("You haven't completed your current task yet. Are you sure you want to exit? Type \"Yes\" or \"No\".")
 
   checkExitResponse = input()
 
@@ -142,10 +145,10 @@ def are_you_sure_you_want_to_exit():
 
 def ask_again():
 
-  print("Type \"done\" to finish timing a task, \"rename\" to edit your task, \"manual\" to add a task manually, or \"exit\" to abandon your current task and exit.")
+  console.print("Type \"done\" to finish timing a task, \"rename\" to edit your task, \"manual\" to add a task manually, or \"exit\" to abandon your current task and exit.")
 
   userInput = input()
-  print("\n")
+  print()
   
   return userInput
 
@@ -200,10 +203,10 @@ def manual_task_input(userInput):
 
     return False
   
-  print("\nYou'd like to manually enter a task and time. What task would you like to enter?\n")
+  console.print("\nYou'd like to [bold]manually[/bold] enter a task and time. What task would you like to enter?\n")
   taskName = input()
   
-  print(f"\nGot it. How long did you work on {taskName}?\nYou can type this in HH:MM:SS format or in regular English (e.g. 20 minutes).\n")
+  console.print(f"\nGot it. How long did you work on {taskName}?\nYou can type this in HH:MM:SS format or in regular English (e.g. 20 minutes).\n")
 
   taskLengthInput = input()
 
@@ -211,7 +214,7 @@ def manual_task_input(userInput):
   
   while timeInSeconds is None:
 
-    taskLengthInput = input("\nLooks like you typed your time in an invalid format. Try typing it in either HH:MM:SS format or in regular English (e.g. 1 hour, 2 minutes, or 3 seconds).\n\n")
+    taskLengthInput = console.input("\nLooks like you typed your time in an invalid format. Try typing it in [bold]either HH:MM:SS format or in regular English (e.g. 1 hour, 2 minutes, or 3 seconds).[/bold]\n\n")
     timeInSeconds = convert_to_seconds(taskLengthInput)
 
   global totalTime, totalTimeString
@@ -243,7 +246,7 @@ def cancel_task(userInput):
 
       return None
 
-  print("Are you sure you want to cancel your current task? You'll lose the data. Type \"yes\" or \"no\"\n")
+  console.print("Are you sure you want to cancel your current task? You'll lose the data. Type [green]\"yes\"[/green] or [green]\"no\"[/green]\n")
 
   answer = input()
 
@@ -264,7 +267,7 @@ def rename_task(userInput):
 
   newTaskName = input()
   print("\n")
-  print(f"Task name changed to {newTaskName}.\n")
+  console.print(f"Task name changed to [indian_red1]{newTaskName}.[/indian_red1]\n")
   
   global taskName
   taskName = newTaskName
@@ -317,8 +320,8 @@ def check_input(userInput):
 
 def print_task_recap(taskName, taskTimeUnits, totalTimeString, taskTime):
 
-  print(f"{str(taskTime)} {str(taskTimeUnits)} of {taskName.upper()}.")
-  print(totalTimeString)
+  console.print(f"{str(taskTime)} {str(taskTimeUnits)} of {taskName.upper()}.")
+  console.print(totalTimeString)
 
 def add_total_time_repeated_tasks(taskNameList, taskName, taskTime, taskTimesInSecondsList):
     
@@ -391,7 +394,7 @@ def check_premature_done(taskName):
   if taskName.casefold() != "done".casefold():
     return taskName
 
-  print("You can't be done yet! Type a task name first or \"exit\" if you'd like to quit.\n")
+  console.print("You can't be done yet! Type a [green]task name[/green] first or \"exit\" if you'd like to quit.\n")
   newInput = input()
 
   taskName = check_premature_done(newInput)
@@ -415,6 +418,8 @@ todaysDate = date.today()
 todayDayOfWeekFormat = datetime.now().strftime('%A')
 programEndDayOfWeekFormat = datetime.now().strftime('%A')
 
+console = Console()
+
 taskNameList = []
 taskTimeList = []
 taskTimesInSecondsList = []
@@ -431,14 +436,16 @@ hasNotEnteredFirstTask = True
 taskWasEnteredAndCompleted = False
 prompt = "So, what are you working on?\n"
 
-programOn = True
+just_fix_windows_console()
 
-print("Welcome to Laps!")
+programOn = True
+ 
+console.print(Markdown("## Welcome to Laps!"))
 
 while programOn:
 
-  print("\nType your task's name. \nType \"done\" to time your task, \"rename\" to edit your task, or \"exit\" to stop and save.\n")
-  print(prompt)
+  console.print("\nType your task's name. \nType \"done\" to time your task, \"rename\" to edit your task, or \"exit\" to stop and save.\n")
+  console.print(f"{prompt}", style="green")
   taskName = input()
 
   prompt = "What are you working on now?\n"
@@ -464,8 +471,8 @@ while programOn:
   taskStartTime = time.time()
   taskStartTimeHourFormat = datetime.now().strftime("%I:%M:%S %p")
 
-  print(f"\nStarting {taskName.upper()} at {str(taskStartTimeHourFormat)}\n")
-  print(f"Type \"done\" when you're done with \"{taskName}\".\n")
+  console.print(f"\nStarting [indian_red1]{taskName.upper()}[/indian_red1] at {str(taskStartTimeHourFormat)}\n")
+  console.print(f"Type \"done\" when you're done with \"{taskName}\".\n")
   secondInput = input()
   print()
 
@@ -498,12 +505,12 @@ while programOn:
 
   addTasksToLists(taskName, taskTime, timeStringsReturned)
 
-  print(f"{taskName.upper()} (Task No. {str(taskNumber)})")
+  console.print(f"[bold]{taskName.upper()}[/bold] (Task No. {str(taskNumber)})")
 
   print_task_recap(taskName, timeStringsReturned[2], timeStringsReturned[1], timeStringsReturned[4])
 
   # ASCII divider
-  print("-" * 20)
+  console.print("-" * 20)
 
   taskNumber += 1
   programEndDayOfWeekFormat = datetime.now().strftime('%A')
