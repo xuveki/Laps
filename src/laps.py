@@ -449,7 +449,7 @@ console.print("Welcome to Laps!", style="bold", justify="center")
 
 while programOn:
 
-  console.print("\nType your task's name. \nType \"done\" to time your task, \"rename\" to edit your task, or \"exit\" to stop and save.\n")
+  console.print("\nType in your task's name. \nType \"done\" to time your task, \"rename\" to edit your task, or \"exit\" to stop and save.\n")
   console.print(f"{prompt}", style="green")
   taskName = input()
 
