@@ -206,7 +206,7 @@ def manual_task_input(userInput):
   console.print("\nYou'd like to [bold]manually[/bold] enter a task and time. What task would you like to enter?\n")
   taskName = input()
   
-  console.print(f"\nGot it. How long did you work on {taskName}?\nYou can type this in HH:MM:SS format or in regular English (e.g. 20 minutes).\n")
+  console.print(f"\nGot it. How long did you work on [indian_red1]{taskName}[/indian_red1]?\nYou can type this in HH:MM:SS format or in regular English (e.g. 20 minutes).\n")
 
   taskLengthInput = input()
 
