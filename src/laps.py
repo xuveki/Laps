@@ -101,7 +101,7 @@ def calculate_repeated_task_times():
 
 def final_print():
   
-  console.print("\nOkay. You want to exit. [bold]Here's a breakdown of your day:[/bold]\n")
+  console.print("\nOkay. Exiting Laps. [bold]Here's a breakdown of your day:[/bold]\n")
 
   console.print(f"{str(todaysDate)}\n")
 
@@ -320,8 +320,13 @@ def check_input(userInput):
 
 def print_task_recap(taskName, taskTimeUnits, totalTimeString, taskTime):
 
-  console.print(f"{str(taskTime)} {str(taskTimeUnits)} of {taskName.upper()}.")
-  console.print(totalTimeString)
+  global taskNumber
+
+  console.print(f"[bold]{taskName.upper()}[/bold] (Task No. {str(taskNumber)})")
+  console.print(f"{str(taskTime)} {str(taskTimeUnits)} of {taskName.upper()}.", style="bold")
+  console.print(totalTimeString, style="bold")
+  
+  taskNumber += 1
 
 def add_total_time_repeated_tasks(taskNameList, taskName, taskTime, taskTimesInSecondsList):
     
@@ -505,14 +510,11 @@ while programOn:
 
   addTasksToLists(taskName, taskTime, timeStringsReturned)
 
-  console.print(f"[bold]{taskName.upper()}[/bold] (Task No. {str(taskNumber)})")
-
   print_task_recap(taskName, timeStringsReturned[2], timeStringsReturned[1], timeStringsReturned[4])
 
   # ASCII divider
   console.print("-" * 20)
 
-  taskNumber += 1
   programEndDayOfWeekFormat = datetime.now().strftime('%A')
 
 program_quit()
