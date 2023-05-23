@@ -121,7 +121,7 @@ def final_print():
   commentInput = input("Add any comments you have below:\n")
 
   console.print("\nExiting program.\n", style="bold")
-  console.print(Markdown("### Goodbye"))
+  console.print("Goodbye", style="bold", justify="center")
   #console.print(Markdown("★─▄█▀▀║░▄█▀▄║▄█▀▄║██▀▄║─★\n★─██║▀█║██║█║██║█║██║█║─★\n★─▀███▀║▀██▀║▀██▀║███▀║─★\n★───────────────────────★\n★───▐█▀▄─ ▀▄─▄▀ █▀▀──█───★\n★───▐█▀▀▄ ──█── █▀▀──▀───★\n★───▐█▄▄▀ ──▀── ▀▀▀──▄───★"))
 
   return commentInput
@@ -440,7 +440,7 @@ just_fix_windows_console()
 
 programOn = True
  
-console.print(Markdown("## Welcome to Laps!"))
+console.print("Welcome to Laps!", style="bold", justify="center")
 
 while programOn:
 
