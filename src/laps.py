@@ -1,8 +1,8 @@
 import time
 import sys
 import os
-from colorama import Fore, Back, Style, just_fix_windows_console
 from datetime import date, datetime
+from colorama import Fore, Back, Style, just_fix_windows_console
 from rich.console import Console
 from rich.markdown import Markdown
 
@@ -121,7 +121,7 @@ def final_print():
   commentInput = input("Add any comments you have below:\n")
 
   console.print("\nExiting program.\n", style="bold")
-  console.print("Goodbye", style="bold", justify="center")
+  console.print("Goodbye", style="bold")
   #console.print(Markdown("★─▄█▀▀║░▄█▀▄║▄█▀▄║██▀▄║─★\n★─██║▀█║██║█║██║█║██║█║─★\n★─▀███▀║▀██▀║▀██▀║███▀║─★\n★───────────────────────★\n★───▐█▀▄─ ▀▄─▄▀ █▀▀──█───★\n★───▐█▀▀▄ ──█── █▀▀──▀───★\n★───▐█▄▄▀ ──▀── ▀▀▀──▄───★"))
 
   return commentInput
