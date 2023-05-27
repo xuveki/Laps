@@ -2,3 +2,4 @@ laps-history*
 history/
 .DS_Store
 __pycache__/
+todo.md

@@ -445,6 +445,7 @@ just_fix_windows_console()
 
 programOn = True
  
+console.print(" ", justify="center")
 console.print("Welcome to Laps!", style="bold", justify="center")
 
 while programOn:
