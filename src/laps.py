@@ -66,11 +66,12 @@ def create_file_and_write(commentInput):
       file_object.write("\n\n")
 
     file_object.write("Date: ")
-    file_object.write(f"{str(todaysDate)}.")
+    file_object.write(f"{str(PROGRAM_START_DATE)}.")
     
-    file_object.write(f"\nStarted on {todayDayOfWeekFormat} at {programStartTimeForFileWrite}.")
+    file_object.write(f"\nStarted on {PROGRAM_START_DAY_OF_WEEK} at {PROGRAM_START_TIME_FOR_WRITE}.")
 
-    file_object.write(f'\nEnded on {programEndDayOfWeekFormat} at {datetime.now().strftime("%I:%M %p")}.\n\n')
+    programEndDayOfWeek = datetime.now().strftime('%A')
+    file_object.write(f'\nEnded on {programEndDayOfWeek} at {datetime.now().strftime("%I:%M %p")}.\n\n')
 
     file_object.write("Tasks and times:\n\n")
 
@@ -84,13 +85,13 @@ def calculate_repeated_task_times():
     
   for task in repeatedTasks:
   
-    if repeatedTasks[task] > 3600:
-      repeatedTasks[task] /= 3600
+    if repeatedTasks[task] > SECONDS_IN_HOUR:
+      repeatedTasks[task] /= SECONDS_IN_HOUR
       repeatedTasks[task] = round(repeatedTasks[task], 2)
       repeatedTasks[task] = "for " + str(repeatedTasks[task]) +  " Hours."
 
-    elif repeatedTasks[task] > 60.00:
-      repeatedTasks[task] /= 60.00
+    elif repeatedTasks[task] > SECONDS_IN_MINUTE:
+      repeatedTasks[task] /= SECONDS_IN_MINUTE
       repeatedTasks[task] = round(repeatedTasks[task], 2)
       repeatedTasks[task] = "for " + str(repeatedTasks[task]) +  " Minutes."
 
@@ -101,9 +102,12 @@ def calculate_repeated_task_times():
 
 def final_print():
   
-  console.print("\nOkay. Exiting Laps. [bold]Here's a breakdown of your day:[/bold]\n")
+  console.print("\nExiting Laps. [bold]Here's a breakdown of your day:[/bold]\n")
 
-  console.print(f"{str(todaysDate)}\n")
+  console.print(f"{str(PROGRAM_START_DATE)}\n")
+
+  if date.today() != PROGRAM_START_DATE:
+    console.print(f"Ended on {str(date.today())}\n")
 
   taskNamesAndTimes = "\n".join("{} {}".format(x.upper(), y) for x, y in zip(taskNameList, taskTimeList))
   console.print(taskNamesAndTimes, "\n",)
@@ -165,7 +169,7 @@ def convert_to_seconds(userInput):
       hours = int(parts[0])
       minutes = int(parts[1])
       seconds = int(parts[2])
-      return hours * 3600 + minutes * 60 + seconds
+      return hours * SECONDS_IN_HOUR + minutes * SECONDS_IN_MINUTE + seconds
     
     except ValueError:
       return None  # Invalid format
@@ -184,9 +188,9 @@ def convert_to_seconds(userInput):
       if unit.endswith('s'):
         unit = unit[:-1]  # Remove 's' from the unit if present
       if unit == 'hour' or unit == 'hours':
-        return value * 3600
+        return value * SECONDS_IN_HOUR
       elif unit == 'minute' or unit == 'minutes':
-        return value * 60
+        return value * SECONDS_IN_MINUTE
       elif unit == 'second' or unit == 'seconds':
         return value
       else:
@@ -359,14 +363,14 @@ def addTasksToLists(taskName, taskTime, timeStringsReturned):
 
 def calculate_task_times(taskTime, totalTime):
 
-  if taskTime > 3600:
-    taskTime /= 3600
+  if taskTime > SECONDS_IN_HOUR:
+    taskTime /= SECONDS_IN_HOUR
     taskTime = round(taskTime, 2)
     taskTimeUnits = "Hours"
     taskTimeString = "for " + str(taskTime) +  " Hours."
 
-  elif taskTime > 60.00:
-    taskTime /= 60.00
+  elif taskTime > SECONDS_IN_MINUTE:
+    taskTime /= SECONDS_IN_MINUTE
     taskTime = round(taskTime, 2)
     taskTimeUnits = "Minutes"
     taskTimeString = "for " + str(taskTime) +  " Minutes."
@@ -375,14 +379,14 @@ def calculate_task_times(taskTime, totalTime):
     taskTimeUnits = "Seconds"
     taskTimeString = "for " + str(taskTime) +  " Seconds."
 
-  if totalTime > 3600:
-    totalTime /= 3600
+  if totalTime > SECONDS_IN_HOUR:
+    totalTime /= SECONDS_IN_HOUR
     totalTime = round(totalTime, 2)
     totalTimeUnits = "Hours"
     totalTimeString = str(totalTime) + " Hours in total."
 
-  elif totalTime > 60.00:
-    totalTime /= 60.00
+  elif totalTime > SECONDS_IN_MINUTE:
+    totalTime /= SECONDS_IN_MINUTE
     totalTime = round(totalTime, 2)
     totalTimeUnits = "Minutes"
     totalTimeString = str(totalTime) + " Minutes in total."
@@ -415,32 +419,32 @@ def check_premature_done(taskName):
 # create_file_and_write calls write_task_and_times and returns through the stack into main
 # check_input 's return is stored into checkInputResult
 
-programStartTime = time.time()
+PROGRAM_START_TIME = time.time() # not currently using this. should delete?
+PROGRAM_START_TIME_FOR_WRITE = datetime.now().strftime("%I:%M %p")
+PROGRAM_START_DATE = date.today()
+PROGRAM_START_DAY_OF_WEEK = datetime.now().strftime('%A')
+programEndDayOfWeek = datetime.now().strftime('%A')
 
-programStartTimeForFileWrite = datetime.now().strftime("%I:%M %p")
-
-todaysDate = date.today()
-todayDayOfWeekFormat = datetime.now().strftime('%A')
-programEndDayOfWeekFormat = datetime.now().strftime('%A')
-
-console = Console()
+SECONDS_IN_HOUR = 3600
+MINUTES_IN_HOUR = 60
+SECONDS_IN_MINUTE = 60
 
 taskNameList = []
 taskTimeList = []
 taskTimesInSecondsList = []
 repeatedTasks = {}
 
-hasNotCompletedATaskMessage = "Nothing was done before program exit."
-totalTimeString = hasNotCompletedATaskMessage
+HAS_NOT_COMPLETED_A_TASK_MESSAGE = "Nothing was done before program exit."
+totalTimeString = HAS_NOT_COMPLETED_A_TASK_MESSAGE
 totalTime = 0
 taskTime = 0
-
 taskNumber = 1
 
 hasNotEnteredFirstTask = True
 taskWasEnteredAndCompleted = False
 prompt = "So, what are you working on?\n"
 
+console = Console()
 just_fix_windows_console()
 
 programOn = True
@@ -457,9 +461,9 @@ while programOn:
   prompt = "What are you working on now?\n"
 
   taskName = check_premature_done(taskName)
-  checkResult = check_quit(taskName)
+  checkResultForQuit = check_quit(taskName)
   
-  if checkResult == True:
+  if checkResultForQuit == True:
 
     userCommentReturned = final_print()
     create_file_and_write(userCommentReturned)
@@ -515,7 +519,5 @@ while programOn:
 
   # ASCII divider
   console.print("-" * 20)
-
-  programEndDayOfWeekFormat = datetime.now().strftime('%A')
 
 program_quit()
