@@ -5,10 +5,13 @@ from datetime import date, datetime
 from colorama import Fore, Back, Style, just_fix_windows_console
 from rich.console import Console
 from rich.markdown import Markdown
+from rich.prompt import Prompt
 
 def program_quit():
     
-  # print("\nExited")
+  console.print("\nExiting program.\n", style="bold")
+  console.print("Goodbye", style="bold")
+  #console.print(Markdown("★─▄█▀▀║░▄█▀▄║▄█▀▄║██▀▄║─★\n★─██║▀█║██║█║██║█║██║█║─★\n★─▀███▀║▀██▀║▀██▀║███▀║─★\n★───────────────────────★\n★───▐█▀▄─ ▀▄─▄▀ █▀▀──█───★\n★───▐█▀▀▄ ──█── █▀▀──▀───★\n★───▐█▄▄▀ ──▀── ▀▀▀──▄───★"))
   sys.exit(0)  
 
 # Iterate through the task list and write the names and times to the file
@@ -81,6 +84,8 @@ def create_file_and_write(commentInput):
     
     file_object.write("-" * 20)
 
+    console.print(f"\nWrote to {historyDir}")
+
 def calculate_repeated_task_times():
     
   for task in repeatedTasks:
@@ -102,7 +107,7 @@ def calculate_repeated_task_times():
 
 def final_print():
   
-  console.print("\nExiting Laps. [bold]Here's a breakdown of your day:[/bold]\n")
+  console.print("\nExiting Laps. First, [bold]here's a breakdown of your day:[/bold]\n")
 
   console.print(f"{str(PROGRAM_START_DATE)}\n")
 
@@ -122,11 +127,7 @@ def final_print():
 
   console.print("\n" + "-" * 20)
   
-  commentInput = input("Add any comments you have below:\n")
-
-  console.print("\nExiting program.\n", style="bold")
-  console.print("Goodbye", style="bold")
-  #console.print(Markdown("★─▄█▀▀║░▄█▀▄║▄█▀▄║██▀▄║─★\n★─██║▀█║██║█║██║█║██║█║─★\n★─▀███▀║▀██▀║▀██▀║███▀║─★\n★───────────────────────★\n★───▐█▀▄─ ▀▄─▄▀ █▀▀──█───★\n★───▐█▀▀▄ ──█── █▀▀──▀───★\n★───▐█▄▄▀ ──▀── ▀▀▀──▄───★"))
+  commentInput = console.input("[green]Add any comments you have below:[/green]\n\n")
 
   return commentInput
 
@@ -149,7 +150,7 @@ def are_you_sure_you_want_to_exit():
 
 def ask_again():
 
-  console.print("Type \"done\" to finish timing a task, \"rename\" to edit your task, \"manual\" to add a task manually, or \"exit\" to abandon your current task and exit.")
+  console.print("Type \"done\" to finish timing a task, \"rename\" to rename your task, or \"exit\" to abandon your current task and exit.")
 
   userInput = input()
   print()
@@ -210,7 +211,7 @@ def manual_task_input(userInput):
   console.print("\nYou'd like to [bold]manually[/bold] enter a task and time. What task would you like to enter?\n")
   taskName = input()
   
-  console.print(f"\nGot it. How long did you work on [indian_red1]{taskName}[/indian_red1]?\nYou can type this in HH:MM:SS format or in regular English (e.g. 20 minutes).\n")
+  console.print(f"\nGot it. How long did you work on [indian_red1]{taskName.upper()}[/indian_red1]?\nYou can type this in HH:MM:SS format or in regular English (e.g. 20 minutes).\n")
 
   taskLengthInput = input()
 
@@ -271,7 +272,7 @@ def rename_task(userInput):
 
   newTaskName = input()
   print("\n")
-  console.print(f"Task name changed to [indian_red1]{newTaskName}.[/indian_red1]\n")
+  console.print(f"Task name changed to [indian_red1]{newTaskName.upper()}.[/indian_red1]\n")
   
   global taskName
   taskName = newTaskName
@@ -454,7 +455,7 @@ console.print("Welcome to Laps!", style="bold", justify="center")
 
 while programOn:
 
-  console.print("\nType in your task's name. \nType \"done\" to time your task, \"rename\" to edit your task, or \"exit\" to stop and save.\n")
+  console.print("\nType in your task's name. \nType \"done\" to time your task, \"rename\" to edit your task, \"manual\" to enter a task manually, or \"exit\" to stop and save.\n")
   console.print(f"{prompt}", style="green")
   taskName = input()
 
