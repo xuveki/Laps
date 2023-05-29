@@ -424,7 +424,6 @@ PROGRAM_START_TIME = time.time() # not currently using this. should delete?
 PROGRAM_START_TIME_FOR_WRITE = datetime.now().strftime("%I:%M %p")
 PROGRAM_START_DATE = date.today()
 PROGRAM_START_DAY_OF_WEEK = datetime.now().strftime('%A')
-programEndDayOfWeek = datetime.now().strftime('%A')
 
 SECONDS_IN_HOUR = 3600
 MINUTES_IN_HOUR = 60
