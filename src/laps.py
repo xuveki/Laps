@@ -84,7 +84,7 @@ def create_file_and_write(commentInput):
     
     file_object.write("-" * 20)
 
-    console.print(f"\nWrote to {historyDir}")
+    console.print(f"\nWriting to {historyDir}")
 
 def calculate_repeated_task_times():
     
@@ -202,7 +202,18 @@ def convert_to_seconds(userInput):
 
   return None
 
-def manual_task_input(userInput):
+def keep_checking_for_rename(userInput):
+  
+  taskLengthInput = userInput
+
+  while rename_task(taskLengthInput) != False:
+
+    console.print(f"How long did you work on [indian_red1]{taskName.upper()}?\n")
+    taskLengthInput = input()
+  
+  return taskLengthInput
+
+def create_task_manually(userInput):
 
   if userInput.casefold() != "manual".casefold():
 
@@ -210,16 +221,22 @@ def manual_task_input(userInput):
   
   console.print("\nYou'd like to [bold]manually[/bold] enter a task and time. What task would you like to enter?\n")
   taskName = input()
-  
-  console.print(f"\nGot it. How long did you work on [indian_red1]{taskName.upper()}[/indian_red1]?\nYou can type this in HH:MM:SS format or in regular English (e.g. 20 minutes).\n")
+
+  console.print(f"\nGot it. How long did you work on [indian_red1]{taskName.upper()}[/indian_red1]?\nYou can type this in HH:MM:SS format or in regular English (e.g. 20 minutes).")
+  console.print(f"Type \"rename\" to rename your task.\n")
 
   taskLengthInput = input()
+
+  taskLengthInput = keep_checking_for_rename(taskLengthInput)
 
   timeInSeconds = convert_to_seconds(taskLengthInput)
   
   while timeInSeconds is None:
 
-    taskLengthInput = console.input("\nLooks like you typed your time in an invalid format. Try typing it in [bold]either HH:MM:SS format or in regular English (e.g. 1 hour, 2 minutes, or 3 seconds).[/bold]\n\n")
+    taskLengthInput = console.input("\nLooks like you typed your time in an invalid format (or maybe you tried typing in \"rename\"). Try typing it in [bold]either HH:MM:SS format or in regular English (e.g. 1 hour, 2 minutes, or 3 seconds).[/bold]\n\n")
+
+    taskLengthInput = keep_checking_for_rename(taskLengthInput)
+    
     timeInSeconds = convert_to_seconds(taskLengthInput)
 
   global totalTime, totalTimeString
@@ -469,7 +486,7 @@ while programOn:
     create_file_and_write(userCommentReturned)
     break
 
-  elif manual_task_input(taskName) == True:
+  elif create_task_manually(taskName) == True:
 
     taskWasEnteredAndCompleted = True
     continue
@@ -486,7 +503,7 @@ while programOn:
   secondInput = input()
   print()
 
-  CheckInputForManual = manual_task_input(secondInput)
+  CheckInputForManual = create_task_manually(secondInput)
 
   checkInputResult = check_input(secondInput)
 
